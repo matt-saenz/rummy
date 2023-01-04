@@ -96,7 +96,10 @@ else:
 save = get_y_n("Save the game to a file (y/n)? ")
 
 if save == "n":
-    sys.exit(0)
+    are_you_sure = get_y_n("Are you sure you don't want to save the game (y/n)? ")
+
+    if are_you_sure == "y":
+        sys.exit(0)
 
 if game_file:
     overwrite = get_y_n(f"Overwrite {game_file} (y/n)? ")
