@@ -18,6 +18,11 @@ class TestRummy(unittest.TestCase):
         for player in self.game.players:
             self.game.add_score(player, 10)
 
+    def test_empty(self):
+        self.assertFalse(self.game.empty)
+        empty_game = RummyGame()
+        self.assertTrue(empty_game.empty)
+
     def test_scorecard(self):
         self.assertEqual(
             self.game.scorecard,

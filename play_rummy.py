@@ -1,7 +1,6 @@
 """Script for playing a game of rummy using the rummy module."""
 
 
-from datetime import datetime
 import sys
 
 from rummy import RummyGame
@@ -12,16 +11,15 @@ from utils import get_int, get_y_n
 
 script = sys.argv[0]
 args = sys.argv[1:]
-usage = f"Usage: {script} target_score [game_file]"
+usage = f"Usage: {script} target_score game_file"
 
 if not args:
     sys.exit(usage)
 
-if len(args) > 2:
-    sys.exit("Error: Too many args given")
+if len(args) != 2:
+    sys.exit("Error: Exactly two args required")
 
-target_score_in = args[0]
-game_file = args[1] if len(args) == 2 else None
+target_score_in, game_file = args
 
 
 # Set up game
@@ -32,17 +30,20 @@ except ValueError:
     sys.exit("Error: target_score must be an integer")
 
 
-ts = datetime.now().strftime("%Y_%m_%d_%H_%M")
-file_name = f"rummy_{ts}.json"
-
-
-if game_file:
+try:
     game = RummyGame(game_file)
-    print(f"Loaded a previous game from {game_file}")
-else:
-    game = RummyGame()
-    print("Starting a new game of rummy")
+except FileNotFoundError:
+    new_game = get_y_n(f"{game_file} not found, create new file (y/n)? ")
 
+    if new_game == "n":
+        sys.exit(0)
+
+    game = RummyGame()
+else:
+    print(f"Loaded a previous game from {game_file}")
+
+
+if game.empty:
     while True:
         player = input("Enter the name of a player to add to the game: ")
 
@@ -68,52 +69,40 @@ print(f"Target score to win the game is {target_score}\n")
 winner = game.find_winner(target_score)
 
 if winner:
-    print(f"{winner} already has a winning score!\n")
-else:
-    while True:
-        for player in game.players:
-            score = get_int(f"Enter the score for {player}: ")
-            game.add_score(player, score)
+    print(f"{winner} already has a winning score!")
+    sys.exit(0)
 
-        print(f"\nUpdated scoreboard:\n{game}\n")
+while True:
+    scores = {}
 
-        winner = game.find_winner(target_score)
+    for player in game.players:
+        score = get_int(f"Enter the score for {player}: ")
+        scores[player] = score
 
-        if winner:
-            print(f"{winner} won the game!\n")
-            break
+    print()  # For spacing
+    record = get_y_n("Record the above scores (y/n)? ")
 
-        cont = get_y_n("Continue playing (y/n)? ")
-
-        print()  # For spacing
-
-        if cont == "n":
-            break
-
-
-# Save game
-
-save = get_y_n("Save the game to a file (y/n)? ")
-
-if save == "n":
-    are_you_sure = get_y_n("Are you sure you don't want to save the game (y/n)? ")
-
-    if are_you_sure == "y":
+    if record == "n":
+        print("Aborted recording the above scores")
         sys.exit(0)
 
-if game_file:
-    overwrite = get_y_n(f"Overwrite {game_file} (y/n)? ")
+    for player, score in scores.items():
+        game.add_score(player, score)
 
-    if overwrite == "y":
-        game.save(game_file)
-        print(f"Saved game to {game_file}")
-        sys.exit(0)
+    game.save(game_file)
 
-use_gen = get_y_n(f"Use generated file name {file_name} (y/n)? ")
+    print(f"\nUpdated scoreboard:\n{game}\n")
+    print(f"(progress saved to {game_file})\n")
 
-if use_gen == "n":
-    file_name = input("Enter your preferred file name: ")
+    winner = game.find_winner(target_score)
 
-game.save(file_name)
+    if winner:
+        print(f"{winner} won the game!")
+        break
 
-print(f"Saved game to {file_name}")
+    cont = get_y_n("Continue playing (y/n)? ")
+
+    if cont == "n":
+        break
+
+    print()  # For spacing, before next round

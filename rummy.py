@@ -17,6 +17,11 @@ class RummyGame:
             with open(game_file) as f:
                 self._scorecard = json.load(f)
 
+    @property
+    def empty(self) -> bool:
+        """Indicates whether the game is empty (no players added yet)."""
+        return not self._scorecard
+
     def add_player(self, name: str, starting_score: int) -> None:
         """Add a player to the game with a starting score."""
 
