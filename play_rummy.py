@@ -33,9 +33,9 @@ except ValueError:
 try:
     game = RummyGame(game_file)
 except FileNotFoundError:
-    new_game = get_y_n(f"{game_file} not found, create new file (y/n)? ")
+    create = get_y_n(f"{game_file} not found, create new file (y/n)? ")
 
-    if new_game == "n":
+    if create == "n":
         sys.exit(0)
 
     game = RummyGame()
