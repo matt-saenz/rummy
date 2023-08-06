@@ -25,6 +25,9 @@ class RummyGame:
     def add_player(self, name: str, starting_score: int) -> None:
         """Add a player to the game with a starting score."""
 
+        if not isinstance(name, str) or name == "":
+            raise RummyGameError("name must be a non-empty string")
+
         if name in self._scorecard:
             raise RummyGameError(f"A player named '{name}' is already in the game")
 

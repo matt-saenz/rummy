@@ -40,6 +40,9 @@ class TestRummy(unittest.TestCase):
 
     def test_add_player(self):
         with self.assertRaises(RummyGameError):
+            self.game.add_player("", 0)
+
+        with self.assertRaises(RummyGameError):
             self.game.add_player("Player 1", 0)
 
         with self.assertRaises(RummyGameError):
