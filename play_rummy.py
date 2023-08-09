@@ -1,7 +1,9 @@
 """Script for playing a game of rummy using the rummy module."""
 
 
+import argparse
 import sys
+from pathlib import Path
 
 import utils
 from rummy import RummyGame
@@ -9,38 +11,24 @@ from rummy import RummyGame
 
 # Prelims
 
-script = sys.argv[0]
-args = sys.argv[1:]
-usage = f"Usage: {script} target_score game_file"
-
-if not args:
-    sys.exit(usage)
-
-if len(args) != 2:
-    sys.exit("Error: Exactly two args required")
-
-target_score_in, game_file = args
+parser = argparse.ArgumentParser()
+parser.add_argument("target_score", type=int)
+parser.add_argument("game_file", type=Path)
+args = parser.parse_args()
 
 
 # Set up game
 
-try:
-    target_score = int(target_score_in)
-except ValueError:
-    sys.exit("Error: target_score must be an integer")
-
-
-try:
-    game = RummyGame(game_file)
-except FileNotFoundError:
-    create = utils.confirm(f"{game_file} not found, create new file")
+if not args.game_file.exists():
+    create = utils.confirm(f"{args.game_file} does not exist, create new file")
 
     if not create:
         sys.exit(0)
 
     game = RummyGame()
 else:
-    print(f"Loaded a previous game from {game_file}")
+    game = RummyGame(args.game_file)
+    print(f"Loaded a previous game from {args.game_file}")
 
 
 if game.empty:
@@ -64,9 +52,9 @@ if game.empty:
 # Start game
 
 print(f"\nStarting scoreboard:\n{game}")
-print(f"Target score to win the game is {target_score}\n")
+print(f"Target score to win the game is {args.target_score}\n")
 
-winner = game.find_winner(target_score)
+winner = game.find_winner(args.target_score)
 
 if winner:
     print(f"{winner} already has a winning score!")
@@ -89,12 +77,12 @@ while True:
     for player, score in scores.items():
         game.add_score(player, score)
 
-    game.save(game_file)
+    game.save(args.game_file)
 
     print(f"\nUpdated scoreboard:\n{game}\n")
-    print(f"(progress saved to {game_file})\n")
+    print(f"(progress saved to {args.game_file})\n")
 
-    winner = game.find_winner(target_score)
+    winner = game.find_winner(args.target_score)
 
     if winner:
         print(f"{winner} won the game!")

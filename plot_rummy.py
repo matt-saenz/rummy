@@ -1,24 +1,21 @@
 """Script for plotting a game of rummy."""
 
 
+import argparse
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 
 from rummy import RummyGame
 
 
-script = sys.argv[0]
-args = sys.argv[1:]
-usage = f"Usage: {script} game_file"
-
-if not args:
-    sys.exit(usage)
-
-game_file = args[0]
+parser = argparse.ArgumentParser()
+parser.add_argument("game_file", type=Path)
+args = parser.parse_args()
 
 
-game = RummyGame(game_file)
+game = RummyGame(args.game_file)
 
 if game.empty:
     sys.exit("Error: Cannot make plot for empty game")

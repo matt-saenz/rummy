@@ -3,12 +3,13 @@
 
 import copy
 import json
+from pathlib import Path
 
 
 class RummyGame:
     """A RummyGame object represents a game of rummy."""
 
-    def __init__(self, game_file: str | None = None):
+    def __init__(self, game_file: Path | None = None):
         """Create a new RummyGame object."""
 
         if game_file is None:
@@ -110,7 +111,7 @@ class RummyGame:
             # There is a tie!
             return None
 
-    def save(self, game_file: str) -> None:
+    def save(self, game_file: Path) -> None:
         """Save the game scores to a file in JSON."""
 
         with open(game_file, "w") as f:
