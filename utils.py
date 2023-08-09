@@ -1,8 +1,8 @@
 """Utilities for the play_rummy.py script."""
 
 
-def get_int(message, allow_empty=False):
-    resp = input(message)
+def get_int(message: str, allow_empty: bool = False) -> int:
+    resp = input(message + ": ")
 
     if allow_empty:
         if resp == "":
@@ -18,8 +18,8 @@ def get_int(message, allow_empty=False):
     return integer
 
 
-def get_y_n(message):
-    resp = input(message)
+def confirm(message: str) -> bool:
+    resp = input(message + " (y/n)? ")
 
     while True:
         if resp in {"y", "n"}:
@@ -27,4 +27,4 @@ def get_y_n(message):
 
         resp = input("Oops! Valid inputs are 'y' or 'n'. Please try again: ")
 
-    return resp
+    return resp == "y"

@@ -3,8 +3,8 @@
 
 import sys
 
+import utils
 from rummy import RummyGame
-from utils import get_int, get_y_n
 
 
 # Prelims
@@ -33,9 +33,9 @@ except ValueError:
 try:
     game = RummyGame(game_file)
 except FileNotFoundError:
-    create = get_y_n(f"{game_file} not found, create new file (y/n)? ")
+    create = utils.confirm(f"{game_file} not found, create new file")
 
-    if create == "n":
+    if not create:
         sys.exit(0)
 
     game = RummyGame()
@@ -47,17 +47,17 @@ if game.empty:
     while True:
         player = input("Enter the name of a player to add to the game: ")
 
-        starting_score = get_int(
-            f"Enter the starting score for {player} (or nothing for 0): ",
+        starting_score = utils.get_int(
+            f"Enter the starting score for {player} (or nothing for 0)",
             allow_empty=True,
         )
 
         game.add_player(player, starting_score)
 
         if len(game.players) >= 2:
-            add_another = get_y_n("Add another player to the game (y/n)? ")
+            add_another = utils.confirm("Add another player to the game")
 
-            if add_another == "n":
+            if not add_another:
                 break
 
 
@@ -76,13 +76,13 @@ while True:
     scores = {}
 
     for player in game.players:
-        score = get_int(f"Enter the score for {player}: ")
+        score = utils.get_int(f"Enter the score for {player}")
         scores[player] = score
 
     print()  # For spacing
-    record = get_y_n("Record the above scores (y/n)? ")
+    record = utils.confirm("Record the above scores")
 
-    if record == "n":
+    if not record:
         print("Aborted recording the above scores")
         sys.exit(0)
 
@@ -100,9 +100,9 @@ while True:
         print(f"{winner} won the game!")
         break
 
-    cont = get_y_n("Continue playing (y/n)? ")
+    cont = utils.confirm("Continue playing")
 
-    if cont == "n":
+    if not cont:
         break
 
     print()  # For spacing, before next round
