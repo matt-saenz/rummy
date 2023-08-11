@@ -9,8 +9,10 @@ from pathlib import Path
 class RummyGame:
     """A RummyGame object represents a game of rummy."""
 
-    def __init__(self, game_file: Path | None = None):
+    def __init__(self, game_file: Path | None = None) -> None:
         """Create a new RummyGame object."""
+
+        self._scorecard: dict[str, list[int]]
 
         if game_file is None:
             self._scorecard = {}
@@ -38,7 +40,7 @@ class RummyGame:
         self._scorecard[name] = [starting_score]
 
     @property
-    def players(self) -> list:
+    def players(self) -> list[str]:
         """List of players in the game."""
         return list(self._scorecard)
 
@@ -55,7 +57,7 @@ class RummyGame:
         self._scorecard[player].append(prev_score + score)
 
     @property
-    def scorecard(self) -> dict:
+    def scorecard(self) -> dict[str, list[int]]:
         """
         Game scorecard (cumulative scores).
 
@@ -64,7 +66,7 @@ class RummyGame:
         return copy.deepcopy(self._scorecard)
 
     @property
-    def scoreboard(self) -> dict:
+    def scoreboard(self) -> dict[str, int]:
         """Game scoreboard (latest score only)."""
         scoreboard = {}
 
@@ -73,7 +75,7 @@ class RummyGame:
 
         return scoreboard
 
-    def __str__(self):
+    def __str__(self) -> str:
         list_of_scores = []
 
         for player, score in self.scoreboard.items():
@@ -118,7 +120,7 @@ class RummyGame:
             json.dump(self._scorecard, f, indent=4)
             f.write("\n")
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, RummyGame):
             return NotImplemented
 

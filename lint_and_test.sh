@@ -2,5 +2,5 @@
 set -e
 
 black --check --diff *.py
-mypy rummy.py utils.py test_rummy.py
+mypy --strict rummy.py utils.py
 python test_rummy.py

@@ -1,6 +1,7 @@
 """Testing for rummy module."""
 
 import unittest
+from pathlib import Path
 
 from rummy import RummyGame, RummyGameError
 
@@ -76,8 +77,8 @@ class TestRummy(unittest.TestCase):
         self.assertIsNone(self.game.find_winner(70))
 
     def test_read_write(self):
-        self.game.save("test_game.json")
-        test_game = RummyGame("test_game.json")
+        self.game.save(Path("test_game.json"))
+        test_game = RummyGame(Path("test_game.json"))
         self.assertEqual(self.game, test_game)
 
     def test_str(self):
