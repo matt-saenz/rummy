@@ -26,7 +26,7 @@ def load_game(game_file: Path) -> RummyGame:
     return game
 
 
-def plot_scoreboard(game: RummyGame) -> None:
+def plot_scorecard(game: RummyGame) -> None:
     scorecard = game.scorecard
 
     for player, scores in scorecard.items():
@@ -43,7 +43,7 @@ def plot_scoreboard(game: RummyGame) -> None:
 def main() -> None:
     args = get_args()
     game = load_game(args.game_file)
-    plot_scoreboard(game)
+    plot_scorecard(game)
 
 
 if __name__ == "__main__":
