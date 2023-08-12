@@ -2,5 +2,6 @@
 set -e
 
 black --check --diff *.py
-mypy --strict rummy.py utils.py
+isort --check --diff --profile black *.py
+mypy --strict *.py
 python test_rummy.py

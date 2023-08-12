@@ -5,30 +5,46 @@ import argparse
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 
 from rummy import RummyGame
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("game_file", type=Path)
-args = parser.parse_args()
+def get_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("game_file", type=Path)
+    args = parser.parse_args()
+    return args
 
 
-game = RummyGame(args.game_file)
+def load_game(game_file: Path) -> RummyGame:
+    game = RummyGame(game_file)
 
-if game.empty:
-    sys.exit("Error: Cannot make plot for empty game")
+    if game.empty:
+        sys.exit("Error: Cannot make plot for empty game")
 
-scorecard = game.scorecard
+    return game
 
 
-for player, scores in scorecard.items():
-    plt.plot(scores, label=player, marker=".")
+def plot_scoreboard(game: RummyGame) -> None:
+    scorecard = game.scorecard
 
-plt.xlabel("Hand")
-plt.ylabel("Cumulative score")
-plt.legend()
-plt.grid()
+    for player, scores in scorecard.items():
+        plt.plot(scores, label=player, marker=".")
 
-plt.show()
+    plt.xlabel("Hand")
+    plt.ylabel("Cumulative score")
+    plt.legend()
+    plt.grid()
+
+    plt.show()
+
+
+def main() -> None:
+    args = get_args()
+    game = load_game(args.game_file)
+    plot_scoreboard(game)
+
+
+if __name__ == "__main__":
+    main()
