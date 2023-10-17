@@ -5,7 +5,7 @@ import argparse
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt  # type: ignore
+import matplotlib.pyplot as plt
 
 from rummy import RummyGame
 
@@ -37,7 +37,7 @@ def plot_scorecard(game: RummyGame) -> None:
     plt.legend()
     plt.grid()
 
-    plt.show()
+    plt.show()  # type: ignore[no-untyped-call]
 
 
 def main() -> None:

@@ -2,3 +2,4 @@ matplotlib>=3.7.2
 black
 mypy
 isort
+flake8
